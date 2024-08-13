@@ -1,0 +1,25 @@
+FROM node:slim AS build
+WORKDIR /app
+# inject environment vars
+ARG ARG_FROM_COMPOSE_ONE
+ARG ARG_FROM_COMPOSE_TWO
+# expose the variable to the finished cotainer
+ENV VITE_API_ONE=$ARG_FROM_COMPOSE_ONE
+ENV VITE_API_TWO=$ARG_FROM_COMPOSE_TWO
+COPY package.json ./
+RUN npm install
+COPY . .
+
+FROM build AS development
+CMD ["npm", "run", "dev"]
+
+FROM build AS builder
+RUN npm run build
+
+FROM nginx:stable AS production
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+# docker build -t hello-vue . 
+# docker run -p 180:80 -t hello-vue

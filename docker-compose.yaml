@@ -1,0 +1,32 @@
+networks:
+    hello-network:
+      driver: bridge
+
+services:
+
+  hello-api-one:
+      # image: hello-spring-api:latest
+      build:
+        context: hello-spring-api
+      ports:
+        - "18080:8080"
+      environment:
+        HELLO_DOCKER_ENV: "First Service"
+      networks:
+        - hello-network
+
+  hello-api-two:
+      # image: hello-spring-api:latest
+      build:
+        context: hello-spring-api
+      ports:
+        - "18081:8080"
+      environment:
+        HELLO_DOCKER_ENV: "Second Service"
+      networks:
+        - hello-network
+      depends_on:
+          - hello-api-one
+
+#  container's port 8080 to host port 1808x
+
