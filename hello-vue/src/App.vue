@@ -5,10 +5,14 @@ import axios from 'axios'
 const apiOneUrl = import.meta.env.VITE_API_ONE
 const apiTwoUrl = import.meta.env.VITE_API_TWO
 
+console.log('apiOneUrl='+apiOneUrl)
+console.log('apiTwoUrl='+apiTwoUrl)
+
+
 const item1 = ref({}) as any
 const item2 = ref({}) as any
 
-axios.get(apiOneUrl+'/itme/1')
+axios.get(apiOneUrl+'/item/1')
   .then(function (response) {
     console.log(response);
     item1.value = (response.data)
@@ -19,7 +23,7 @@ axios.get(apiOneUrl+'/itme/1')
 
 
 
-axios.get(apiTwoUrl+'/itme/1')
+axios.get(apiTwoUrl+'/item/1')
   .then(function (response) {
     item2.value = (response.data)
   })

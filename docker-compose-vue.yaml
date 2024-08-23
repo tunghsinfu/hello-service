@@ -9,8 +9,8 @@ services:
       context: hello-vue
       target: production
       args:
-        ARG_FROM_COMPOSE_ONE: http://localhost/api1/
-        ARG_FROM_COMPOSE_TWO: http://localhost/api2/
+        ARG_FROM_COMPOSE_ONE: http://localhost/api1
+        ARG_FROM_COMPOSE_TWO: http://localhost/api2
     depends_on:
         - hello-api-one
         - hello-api-two
@@ -24,18 +24,24 @@ services:
       context: hello-vue
       target: production
       args:
-        ARG_FROM_COMPOSE_ONE: http://localhost/api1/
-        ARG_FROM_COMPOSE_TWO: http://localhost/api2/
+        ARG_FROM_COMPOSE_ONE: http://localhost/api2
+        ARG_FROM_COMPOSE_TWO: http://localhost/api1
     depends_on:
-        - hello-vue-one
+        - hello-api-one
+        - hello-api-two
 
   hello-reverse-proxy:
     image: nginx:stable
     ports:
-      - "800:800"
+      - "80:80"
     networks:
       - hello-network
     volumes:
-      - ./conf.d:/etc/nginx/conf.d
+      - ./hello-nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - hello-vue-one
+      - hello-vue-two
+      - hello-api-one
+      - hello-api-two
 
 #  check merged content: `docker compose -f docker-compose.yaml -f docker-compose-vue.yaml config`
